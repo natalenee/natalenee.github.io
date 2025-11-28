@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - Natalene Gunawan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background: #FAFAFA;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #444;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #4A6FA5;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #4A6FA5;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        nav a.active {
+            color: #4A6FA5;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 120px 2rem 4rem;
+        }
+
+        .page-title {
+            font-size: 2.8rem;
+            color: #222;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        /* Download Button */
+        .download-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #4A6FA5;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(74, 111, 165, 0.2);
+        }
+
+        .download-btn:hover {
+            background: #3d5c89;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(74, 111, 165, 0.3);
+        }
+
+        .download-btn::before {
+            content: "⬇ ";
+            margin-right: 0.5rem;
+        }
+
+        /* PDF Viewer Container */
+        .pdf-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 800px;
+            border: none;
+        }
+
+        /* Alternative: If PDF embedding doesn't work */
+        .pdf-fallback {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .pdf-fallback p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .pdf-fallback-btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            background: #4A6FA5;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .pdf-fallback-btn:hover {
+            background: #3d5c89;
+        }
+
+        /* Instructions Box */
+        .instructions {
+            background: #E8EEF5;
+            border-left: 4px solid #4A6FA5;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+
+        .instructions h3 {
+            color: #4A6FA5;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .instructions p {
+            color: #555;
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .instructions code {
+            background: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #4A6FA5;
+            font-size: 0.9rem;
+        }
+
+        .instructions ol {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2.2rem;
+            }
+
+            .pdf-viewer {
+                height: 600px;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+            }
+
+            .download-btn {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pdf-viewer {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="experiences.html">Experiences</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="resume.html" class="active">Resume</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Resume</h1>
+        <p class="page-subtitle">Like my stuff or need a TLDR? Check out my resume!</p>
+
+        <!-- Download Button -->
+        <div class="download-section">
+            <a href="resume.pdf" download="Natalene_Gunawan_Resume.pdf" class="download-btn">
+                Download Resume
+            </a>
+        </div>
+
+        <!-- PDF Viewer -->
+        <div class="pdf-container">
+            <iframe 
+                class="pdf-viewer" 
+                src="resume.pdf"
+                type="application/pdf">
+            </iframe>
+        </div>
+
+        <!-- Fallback message if PDF doesn't load -->
+        <div class="pdf-fallback" style="display: none;">
+            <p>Unable to display PDF viewer in your browser.</p>
+            <a href="resume.pdf" download="Natalene_Gunawan_Resume.pdf" class="pdf-fallback-btn">
+                Click here to download the resume
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Check if PDF is loaded, show fallback if not
+        const iframe = document.querySelector('.pdf-viewer');
+        const fallback = document.querySelector('.pdf-fallback');
+        const pdfContainer = document.querySelector('.pdf-container');
+
+        iframe.addEventListener('error', () => {
+            pdfContainer.style.display = 'none';
+            fallback.style.display = 'block';
+        });
+
+        // Some browsers don't support PDF viewing in iframe
+        // Check after a delay if the iframe loaded properly
+        setTimeout(() => {
+            try {
+                if (!iframe.contentDocument && !iframe.contentWindow) {
+                    // Can't access iframe content, might be a PDF that loaded successfully
+                    // This is actually a good sign in most browsers
+                }
+            } catch (e) {
+                // Cross-origin restrictions are normal for PDFs
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

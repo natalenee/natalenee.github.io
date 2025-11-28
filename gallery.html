@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Natalene Gunawan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background: #FAFAFA;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #444;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #4A6FA5;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #4A6FA5;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        nav a.active {
+            color: #4A6FA5;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 2rem 4rem;
+        }
+
+        .page-title {
+            font-size: 2.8rem;
+            color: #222;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            /* smaller min width so more items fit per row */
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: white;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(74, 111, 165, 0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            /* smaller thumbnails */
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            padding: 1rem;
+            background: white;
+        }
+
+        /* Hidden thumbnails kept for modal only */
+        .hidden-thumb { display: none !important; }
+
+        /* Projects should appear one per row and show a cover caption to the right of the image */
+        .gallery-item[data-category="projects"] {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            padding: 0.6rem;
+            background: transparent;
+        }
+
+        /* Keep the project image a fixed column on the left */
+        .gallery-item[data-category="projects"] img {
+            flex: 0 0 320px;
+            width: 320px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        /* Caption sits to the right and expands to remaining width */
+        .gallery-item[data-category="projects"] .gallery-caption {
+            flex: 1 1 auto;
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .gallery-item[data-category="projects"] .gallery-title {
+            font-size: 1.05rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .gallery-item[data-category="projects"] .gallery-description {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Responsive: on narrow screens stack the caption under the image */
+        @media (max-width: 700px) {
+            .gallery-item[data-category="projects"] {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .gallery-item[data-category="projects"] img {
+                width: 100%;
+                flex: 0 0 auto;
+            }
+        }
+
+        /* Thumbnails column inserted between cover image and caption */
+        .gallery-item[data-category="projects"] .project-thumbs {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 0 0 96px;
+            margin-left: 0.5rem;
+        }
+
+        .gallery-item[data-category="projects"] .project-thumbs img {
+            width: 96px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .gallery-title {
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 0.3rem;
+        }
+
+        .gallery-description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Modal/Lightbox */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Modal navigation (prev/next) */
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            background: rgba(0,0,0,0.35);
+            border: none;
+            padding: 0.6rem 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            z-index: 2002;
+        }
+
+        .modal-nav.left {
+            left: 20px;
+        }
+
+        .modal-nav.right {
+            right: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            z-index: 2001;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: #4A6FA5;
+        }
+
+        .modal-caption {
+            color: white;
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Category Filters */
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.5rem;
+            background: white;
+            border: 2px solid #4A6FA5;
+            color: #4A6FA5;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #4A6FA5;
+            color: white;
+        }
+
+        /* Placeholder for when no images */
+        .placeholder {
+            text-align: center;
+            padding: 3rem;
+            color: #888;
+        }
+
+        .placeholder p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2.2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 0.8rem;
+            }
+
+            .gallery-item img {
+                height: 140px;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+            }
+
+            .filter-buttons {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="experiences.html">Experiences</a></li>
+            <li><a href="gallery.html" class="active">Gallery</a></li>
+            <li><a href="resume.html">Resume</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Gallery</h1>
+        <p class="page-subtitle">The less-techy side of myself outside of school and work!</p>
+
+        <!-- Category Filters (Optional) -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="art">Art</button>
+            <button class="filter-btn" data-filter="photography">Photography</button>
+            <button class="filter-btn" data-filter="projects">Projects</button>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery-grid">
+            <!-- 
+            =================================================================
+            HOW TO ADD IMAGES:
+            =================================================================
+            
+            1. Create a folder called "images" in your project directory
+               Example structure:
+               portfolio/
+               ├── index.html
+               ├── experiences.html
+               ├── gallery.html
+               ├── resume.html
+               └── images/
+                   ├── art1.jpg
+                   ├── photo1.jpg
+                   └── project1.png
+            
+            2. Copy the gallery-item div below and update:
+               - src="images/YOUR_IMAGE_NAME.jpg"
+               - data-category="art" (or "photography", "projects", "all")
+               - Update title and description
+            
+            3. Supported image formats: .jpg, .jpeg, .png, .gif, .webp
+            
+            EXAMPLE GALLERY ITEMS (uncomment and modify these):
+            -->
+
+            <!-- Example 1: Digital Art -->
+            <!--
+            <div class="gallery-item" data-category="art">
+                <img src="images/artwork1.jpg" alt="Digital Illustration">
+                <div class="gallery-caption">
+                    <div class="gallery-title">Character Design</div>
+                    <div class="gallery-description">Digital illustration created in Procreate</div>
+                </div>
+            </div>
+            -->
+
+            <!-- Example 2: Photography -->
+            <!--
+            <div class="gallery-item" data-category="photography">
+                <img src="images/photo1.jpg" alt="Landscape Photography">
+                <div class="gallery-caption">
+                    <div class="gallery-title">Golden Hour at UCI</div>
+                    <div class="gallery-description">Sunset over campus</div>
+                </div>
+            </div>
+            -->
+
+            <!-- Example 3: Project -->
+            <!--
+            <div class="gallery-item" data-category="projects">
+                <img src="images/project1.png" alt="Hardware Project">
+                <div class="gallery-caption">
+                    <div class="gallery-title">Custom PCB Design</div>
+                    <div class="gallery-description">3-layer PCB for sensor array</div>
+                </div>
+            </div>
+            -->
+
+            <!-- Add more gallery items by copying the structure above -->
+                <!-- Add actual gallery items below (examples) -->
+                <div class="gallery-item" data-category="art" data-title="Still Art" data-description="Studying objects in lighting and focused on realism.">
+                    <img src="images/art/still-art.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-title="Still Art, Pots" data-description="Studying objects in lighting and focused on realism.">
+                    <img src="images/art/still-pot.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Digital Art, He Who Calls" data-description="Created in ProCreate, inspired by a dream">
+                    <img src="images/art/digital-ram.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Digital Art, Faceless Soul" data-description="Created in ProCreate, inspired by humanoid robotics">
+                    <img src="images/art/digital-face.png" alt="Digital Illustration">
+                </div>
+                
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Skull" data-description="3 Hour Session using charcoal.">
+                    <img src="images/art/live-art-skull.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Sketch, Back Study" data-description="Anatomical Study of the back, done with graphite pencil.">
+                    <img src="images/art/sketch-back.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Snow White" data-description="3 Hour Session using Copic Markers.">
+                    <img src="images/art/live-art-snow-white.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Chinese Fabrics" data-description="3 Hour Session using colored pencils.">
+                    <img src="images/art/live-art-chinese.png" alt="Digital Illustration">
+                </div>
+                
+                 <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Figure Study" data-description="30 Hour Session using water colors.">
+                    <img src="images/art/live-art-two-piece.png" alt="Digital Illustration">
+                </div>
+                
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Sitting Figure Study" data-description="30 Hour Session using water colors.">
+                    <img src="images/art/live-art-sitting.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Sitting Figure Study" data-description="1 Hour Session using charcoal and pastel.">
+                    <img src="images/art/live-art-robe.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Abstract Black and White Fabric Study" data-description="1 Hour Session using Acrylic paint">
+                    <img src="images/art/live-abstract-fabric.png" alt="Digital Illustration">
+                </div>
+                
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Inverse Color Study" data-description="1.5 Hour Session using white charcoal">
+                    <img src="images/art/live-bw.png" alt="Digital Illustration">
+                </div>
+                
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Abstract Fabric Study" data-description="1 Hour Session using Acrylic paint">
+                    <img src="images/art/live-abstract-fabric.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Fabric Study" data-description="1.5 Hour Session using charcoal">
+                    <img src="images/art/live-sitting-woman.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Live Art, Abstract Man" data-description="1 Hour Session using Acrylic paint">
+                    <img src="images/art/live-abstract-man.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Sketch, Friends" data-description="Quick sketch of my friends! Done in graphite pencil">
+                    <img src="images/art/live-friends.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Sketch, Face Study" data-description="Geometric Study of Facial Features, done with graphite pencil.">
+                    <img src="images/art/art-face-study.png" alt="Digital Illustration">
+                </div>
+
+                 <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Sketch, Face Study" data-description="Live Study of Facial Features, done with charcoal pencil.">
+                    <img src="images/art/art-face-charcoal-study.png" alt="Digital Illustration">
+                </div>
+
+                 <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Sketch, Face Study" data-description="Anatomy Study of Facial Features, done with graphite and colored pencil.">
+                    <img src="images/art/art-face-anatomy.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Animal Study" data-description="Visit to the zoo, done in Copic markers">
+                    <img src="images/art/animal-grey.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Animal Study" data-description="Visit to the zoo, done in Copic markers">
+                    <img src="images/art/animal-green.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Animal Study" data-description="Visit to the zoo, done in Copic markers">
+                    <img src="images/art/animal-blue.png" alt="Digital Illustration">
+                </div>
+
+                <div class="gallery-item" data-category="art" data-subcategory="live" data-title="Animal Study" data-description="Visit to the zoo, done in Copic markers">
+                    <img src="images/art/animal-red.png" alt="Digital Illustration">
+                </div>
+
+                <!-- PROJECTS -->
+
+                <!-- WEMOTE -->
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-1.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-2.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-3.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-4.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-5.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-6.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-7.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-8.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-9.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-10.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-11.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-12.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-13.png" alt="WEMOTE front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="WeMote Mobile App Design" data-description="Designing an app dedicated to helping with mental health. Icons and Logos fully designed by me and implemented through Figma.">
+                    <img src="images/projects/app/app-14.png" alt="WEMOTE front">
+                </div>
+
+                
+
+                <!-- FIREFIGHTER -->
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="Firefighter Costume Design" data-description="Designing costumes for a creative firefighter-based story. Fully designed by me and done in ProCreate and paper.">
+                    <img src="images/projects/firefighter/fire-green-final.png" alt="Firefighter front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="Firefighter Costume Design" data-description="Designing costumes for a creative firefighter-based story. Fully designed by me and done in ProCreate and paper.">
+                    <img src="images/projects/firefighter/fire-helmet-details.png" alt="Firefighter front">
+                </div>
+                
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="Firefighter Costume Design" data-description="Designing costumes for a creative firefighter-based story. Fully designed by me and done in ProCreate and paper.">
+                    <img src="images/projects/firefighter/fire-helmets.png" alt="Firefighter front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="Firefighter Costume Design" data-description="Designing costumes for a creative firefighter-based story. Fully designed by me and done in ProCreate and paper.">
+                    <img src="images/projects/firefighter/fire-sketches-body.png" alt="Firefighter front">
+                </div>
+
+                <!-- APPAREL DESIGN -->
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="Apparel Final Design" data-description="Designing apparel for the robotics team's 10 year anniversary celebration. Fully designed by me and done in Photoshop and paper">
+                    <img src="images/projects/apparel/apparel-back-final.png" alt="Apparel back final">
+                </div>
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="Apparel Final Design" data-description="Designing apparel for the robotics team's 10 year anniversary celebration. Fully designed by me and done in Photoshop and paper">
+                    <img src="images/projects/apparel/apparel-front.png" alt="Apparel front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="Apparel Final Design" data-description="Designing apparel for the robotics team's 10 year anniversary celebration. Fully designed by me and done in Photoshop and paper">
+                    <img src="images/projects/apparel/apparel-digital-design-alt.png" alt="Apparel front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="Apparel Final Design" data-description="Designing apparel for the robotics team's 10 year anniversary celebration. Fully designed by me and done in Photoshop and paper">
+                    <img src="images/projects/apparel/apparel-ten-years.png" alt="Apparel front">
+                </div>
+
+                <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="Apparel Final Design" data-description="Designing apparel for the robotics team's 10 year anniversary celebration. Fully designed by me and done in Photoshop and paper">
+                    <img src="images/projects/apparel/apparel-sketch.png" alt="Apparel front">
+                </div>
+
+                 <div class="gallery-item" data-category="projects" data-subcategory="live" data-title="Apparel Final Design" data-description="Designing apparel for the robotics team's 10 year anniversary celebration. Fully designed by me and done in Photoshop and paper">
+                    <img src="images/projects/apparel/apparel-sketches.png" alt="Apparel front">
+                </div>
+
+                
+            </div>
+
+            <!-- Placeholder message when no images are added yet -->
+            <div class="placeholder">
+                <p>Gallery items will appear here once you add your images!</p>
+                <p style="font-size: 0.9rem; color: #aaa;">See the HTML comments above for instructions on how to add images.</p>
+            </div>
+    </div>
+
+        <!-- Modal/Lightbox for enlarged images -->
+    <div class="modal" id="imageModal">
+        <span class="modal-close">&times;</span>
+        <button class="modal-nav left" id="modalPrev" aria-label="Previous image">❮</button>
+        <button class="modal-nav right" id="modalNext" aria-label="Next image">❯</button>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
+    </div>
+
+    <script>
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const placeholder = document.querySelector('.placeholder');
+
+        // Check if there are any gallery items
+        if (galleryItems.length === 0) {
+            placeholder.style.display = 'block';
+        } else {
+            placeholder.style.display = 'none';
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+
+                // Filter gallery items
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal/Lightbox functionality with slider (prev/next and swipe)
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const modalCaption = document.getElementById('modalCaption');
+        const closeBtn = document.querySelector('.modal-close');
+        const prevBtn = document.getElementById('modalPrev');
+        const nextBtn = document.getElementById('modalNext');
+
+        let navigableItems = []; // items in the current slider group
+        let currentIndex = 0;
+
+        function getGroupForItem(item) {
+            // For projects, derive grouping from filename prefix (e.g., 'robotics-pic1.png' -> 'robotics')
+            if (item.getAttribute('data-category') === 'projects') {
+                const img = item.querySelector('img');
+                const src = img ? (img.getAttribute('src') || '') : '';
+                const filename = src.split('/').pop() || '';
+                const nameNoExt = filename.split('.').slice(0, -1).join('.') || filename.split('.')[0] || '';
+                const prefix = nameNoExt.split(/[-_]/)[0];
+                return prefix || null;
+            }
+            // Group by subcategory or category otherwise
+            return item.getAttribute('data-subcategory') || item.getAttribute('data-category');
+        }
+
+        function showModalAt(index) {
+            const item = navigableItems[index];
+            const img = item.querySelector('img');
+            // Get title and description from data attributes (set below)
+            const title = item.getAttribute('data-title') || '';
+            const desc = item.getAttribute('data-description') || '';
+            modal.classList.add('active');
+            modalImg.src = img.src;
+            // Show both title and description in modal
+            modalCaption.innerHTML = `<div style="font-weight:600;">${title}</div><div style="font-size:0.95em;">${desc}</div>`;
+            currentIndex = index;
+            // Hide arrows if only one image in group
+            if (navigableItems.length <= 1) {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = '';
+                nextBtn.style.display = '';
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        // Ensure every gallery item has a data-title and data-description for modal use
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            if (!item.hasAttribute('data-title')) item.setAttribute('data-title', 'Untitled Image');
+            if (!item.hasAttribute('data-description')) item.setAttribute('data-description', 'No description provided.');
+        });
+
+        // --- Projects grouping: keep one cover per project and hide other thumbs ---
+        (function groupProjectItems(){
+            const projectItems = Array.from(document.querySelectorAll('.gallery-item[data-category="projects"]'));
+            if (projectItems.length === 0) return;
+
+            const groups = {};
+            projectItems.forEach(item => {
+                const img = item.querySelector('img');
+                const src = img ? (img.getAttribute('src') || '') : '';
+                const filename = src.split('/').pop() || '';
+                const nameNoExt = filename.split('.').slice(0, -1).join('.') || filename.split('.')[0] || '';
+                const prefix = nameNoExt.split(/[-_]/)[0] || nameNoExt || '';
+                if (!groups[prefix]) groups[prefix] = [];
+                groups[prefix].push(item);
+            });
+
+            Object.keys(groups).forEach(prefix => {
+                const items = groups[prefix];
+                // make first item the cover; hide the rest
+                items.forEach((it, idx) => {
+                    if (idx === 0) {
+                        // ensure cover shows a single caption in the grid
+                        if (!it.querySelector('.gallery-caption')) {
+                            const cap = document.createElement('div');
+                            cap.className = 'gallery-caption';
+                            const title = document.createElement('div');
+                            title.className = 'gallery-title';
+                            title.textContent = it.getAttribute('data-title') || 'Untitled Project';
+                            const desc = document.createElement('div');
+                            desc.className = 'gallery-description';
+                            desc.textContent = it.getAttribute('data-description') || '';
+                            cap.appendChild(title);
+                            cap.appendChild(desc);
+                            it.appendChild(cap);
+                        }
+                    } else {
+                        // hide extra thumbs from grid but keep in DOM for modal
+                        it.classList.add('hidden-thumb');
+                        it.setAttribute('aria-hidden', 'true');
+                    }
+                });
+            });
+        })();
+
+        // Add click handler to each gallery item
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const category = item.getAttribute('data-category');
+                // If this is a project, collect items by filename prefix
+                if (category === 'projects') {
+                    const img = item.querySelector('img');
+                    const src = img ? (img.getAttribute('src') || '') : '';
+                    const filename = src.split('/').pop() || '';
+                    const nameNoExt = filename.split('.').slice(0, -1).join('.') || filename.split('.')[0] || '';
+                    const prefix = nameNoExt.split(/[-_]/)[0] || nameNoExt;
+
+                    navigableItems = Array.from(document.querySelectorAll('.gallery-item')).filter(i => {
+                        const ii = i.querySelector('img');
+                        const s = ii ? (ii.getAttribute('src') || '') : '';
+                        const f = s.split('/').pop() || '';
+                        const n = f.split('.').slice(0, -1).join('.') || f.split('.')[0] || '';
+                        const p = n.split(/[-_]/)[0] || n;
+                        return p === prefix && i.style.display !== 'none';
+                    });
+                } else {
+                    const group = getGroupForItem(item);
+                    if (group) {
+                        // collect only visible items in the same group
+                        navigableItems = Array.from(document.querySelectorAll(`.gallery-item[data-subcategory="${group}"], .gallery-item[data-category="${group}"]`)).filter(i => i.style.display !== 'none');
+                    } else {
+                        navigableItems = Array.from(document.querySelectorAll('.gallery-item')).filter(i => i.style.display !== 'none');
+                    }
+                }
+
+                // find index within navigableItems
+                const clickedSrc = item.querySelector('img').src;
+                currentIndex = navigableItems.findIndex(i => i.querySelector('img').src === clickedSrc);
+                if (currentIndex === -1) currentIndex = 0;
+                showModalAt(currentIndex);
+            });
+        });
+
+        closeBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Prev/Next handlers
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (navigableItems.length === 0) return;
+            currentIndex = (currentIndex - 1 + navigableItems.length) % navigableItems.length;
+            showModalAt(currentIndex);
+        });
+
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (navigableItems.length === 0) return;
+            currentIndex = (currentIndex + 1) % navigableItems.length;
+            showModalAt(currentIndex);
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!modal.classList.contains('active')) return;
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'ArrowLeft') prevBtn.click();
+            if (e.key === 'ArrowRight') nextBtn.click();
+        });
+
+        // Touch swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        modal.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        modal.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const dx = touchEndX - touchStartX;
+            if (Math.abs(dx) > 40) {
+                if (dx > 0) prevBtn.click(); else nextBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
