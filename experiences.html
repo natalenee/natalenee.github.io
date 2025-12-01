@@ -147,6 +147,34 @@
             font-weight: bold;
         }
 
+        /* Skill details dropdown */
+        .detail-toggle {
+            margin-top: 0.8rem;
+            display: inline-block;
+            background: transparent;
+            border: 1px solid #4A6FA5;
+            color: #4A6FA5;
+            padding: 0.35rem 0.7rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .skill-details {
+            display: none;
+            margin-top: 0.75rem;
+            color: #444;
+            font-size: 0.95rem;
+            background: #fbfdff;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .skill-details.open {
+            display: block;
+        }
+
         /* Experience Cards */
         .experience-card {
             background: white;
@@ -416,6 +444,17 @@
                     <li>JavaScript</li>
                     <li>HTML/CSS</li>
                 </ul>
+                <button class="detail-toggle" aria-expanded="false">More</button>
+                <div class="skill-details" aria-hidden="true">
+                    <strong>Libraries / Notes</strong>
+                    <ul>
+                        <li>Python: NumPy, pandas, matplotlib, OpenCV, Flask, Keras, TensorFlow, PyTorch, scikit-learn, requests, Beautifulsoup4, Openpyxl, PySimpleGUI</li>
+                        <li>C/C++: STL, embedded C (AVR/ARM)</li>
+                        <li>Java: Android development basics, JUnit</li>
+                        <li>JavaScript: ES6+, DOM, Fetch API</li>
+                        <li>HTML/CSS: responsive layouts, Flexbox, Grid</li>
+                    </ul>
+                </div>
             </div>
             <div class="skill-category">
                 <h3>Tools & Frameworks</h3>
@@ -426,6 +465,17 @@
                     <li>Linux/Unix</li>
                     <li>Arduino</li>
                 </ul>
+                <button class="detail-toggle" aria-expanded="false">More</button>
+                <div class="skill-details" aria-hidden="true">
+                    <strong>Tools / Frameworks</strong>
+                    <ul>
+                        <li>Git: branching, PRs, rebasing</li>
+                        <li>React: hooks, state management</li>
+                        <li>Node.js: Express basics</li>
+                        <li>Linux: shell scripting, package management</li>
+                        <li>Dev tooling: Docker, VSCode</li>
+                    </ul>
+                </div>
             </div>
             <div class="skill-category">
                 <h3>Hardware</h3>
@@ -436,6 +486,17 @@
                     <li>FPGA</li>
                     <li>Embedded Systems</li>
                 </ul>
+                <button class="detail-toggle" aria-expanded="false">More</button>
+                <div class="skill-details" aria-hidden="true">
+                    <strong>Hardware / Tools</strong>
+                    <ul>
+                        <li>PCB: KiCad, Altium</li>
+                        <li>Oscilloscopes, multimeters, soldering</li>
+                        <li>Microcontrollers: Arduino, STM32 basics</li>
+                        <li>FPGA: Verilog, simulation, timing</li>
+                        <li>CAD: AutoCAD, Solidworks, Creo Parametric</li>
+                    </ul>
+                </div>
             </div>
         </div>
         
@@ -578,176 +639,218 @@
         
         <!-- Projects Section -->
          
-        <h2 class="section-header">Projects</h2>
-                <div class="experience-card">
-            <div class="experience-header">
-                <div>
-                    <div class="experience-title">Heart Health Prediction Android App</div>
-                    <div class="experience-company">Personal Project</div>
-                </div>
-                <div class="experience-date">February 2024 - March 2024</div>
+    <h2 class="section-header">Projects</h2>
+
+    <!-- MIPS Pipelined Processor -->
+    <div class="experience-card">
+        <div class="experience-header">
+            <div>
+                <div class="experience-title">MIPS Pipelined Processor</div>
+                <div class="experience-company">Course Project</div>
             </div>
-            <div class="experience-media">
-                <figure class="experience-figure">
-                    <img src="images/experiences/heart-health-app.png" alt="Task management app screenshot">
-                    <figcaption>Simple Heart Health Android App.</figcaption>
-                </figure>
-                <div class="experience-body">
-                    <div class="experience-description">
-                        <p>Built an Android app in Java that predicts heart-issue likelihood on user inputs like age, gender, and cholesterol.</p>
-                        <ul>
-                            <li>Analyzed a Kaggle cardiovascular dataset to identify key factors influencing heart-disease risk.</li>
-                            <li>Implemented responsive frontend using Android Studio</li>
-                        </ul>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">Java</span>
-                        <span class="tag">Kaggle</span>
-                        <span class="tag">Android Studio</span>
-                    </div>
+            <div class="experience-date">October 2025 - November 2025</div>
+        </div>
+        <div class="experience-media">
+            <figure class="experience-figure">
+                <img src="images/experiences/mips-waveform.png" alt="MIPS Waveform">
+                <figcaption>MIPS Pipeline Waveform</figcaption>
+                <figcaption>Click to see more pictures!</figcaption>
+            </figure>
+            <figure class="experience-figure hidden-thumb" aria-hidden="true">
+                <img src="images/experiences/mips-schematic.png" alt="MIPS Schematic">
+                <figcaption>MIPS Schematic</figcaption>
+            </figure>
+            <figure class="experience-figure hidden-thumb" aria-hidden="true">
+                <img src="images/experiences/mips-power-summary.png" alt="MIPS Power Summary">
+                <figcaption>MIPS Power Summary</figcaption>
+            </figure>
+            <div class="experience-body">
+                <div class="experience-description">
+                    <p>Designed and implemented a fully pipelined MIPS processor using Verilog with complete hazard-handling support.</p>
+                    <ul>
+                        <li>Implemented 5-stage pipeline with forwarding, stalling, and control hazard logic.</li>
+                        <li>Developed verification testbenches and optimized timing for Basys3 FPGA deployment.</li>
+                    </ul>
+                </div>
+                <div class="tags">
+                    <span class="tag">Verilog</span>
+                    <span class="tag">Computer Architecture</span>
+                    <span class="tag">MIPS</span>
+                    <span class="tag">Assembly</span>
+                    <span class="tag">FPGA</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="experience-card">
-            <div class="experience-header">
-                <div>
-                    <div class="experience-title">Code Lock Circuit Design</div>
-                    <div class="experience-company">Course Project</div>
-                </div>
-                <div class="experience-date">May 2024 - June 2024</div>
+    <!-- Heart Health Prediction Android App -->
+    <div class="experience-card">
+        <div class="experience-header">
+            <div>
+                <div class="experience-title">Heart Health Prediction Android App</div>
+                <div class="experience-company">Personal Project</div>
             </div>
-            <div class="experience-media">
-                <figure class="experience-figure">
-                    <img src="images/experiences/codelock-front.png" alt="Code Lock Cover">
-                    <figcaption>Code Lock Cover</figcaption>
-                    <figcaption>Click to see more pictures!</figcaption>
-
-                </figure>
-                <figure class="experience-figure hidden-thumb" aria-hidden="true">
-                    <img src="images/experiences/codelock-circuit.png" alt="Code Lock Circuit">
-                    <figcaption>Code Lock Circuit</figcaption>
-                    </figure>
-                <div class="experience-body">
-                    <div class="experience-description">
-                        <p>Created a locking system requiring specific button combination to unlock</p>
-                        <ul>
-                            <li>Designed circuit through NI MultiSim to simulate various situations</li>
-                            <li>Wired and powered the board with breadboard and power supply</li>
-                        </ul>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">Autocad</span>
-                        <span class="tag">Renewable Energy</span>
-                        <span class="tag">IoT</span>
-                        <span class="tag">Circuit Design</span>
-                    </div>
-
+            <div class="experience-date">February 2024 - March 2024</div>
+        </div>
+        <div class="experience-media">
+            <figure class="experience-figure">
+                <img src="images/experiences/heart-health-app.png" alt="Heart health app screenshot">
+                <figcaption>Simple Heart Health Android App.</figcaption>
+            </figure>
+            <div class="experience-body">
+                <div class="experience-description">
+                    <p>Developed an Android app in Java to estimate heart-disease likelihood using user health metrics.</p>
+                    <ul>
+                        <li>Analyzed Kaggle cardiovascular dataset to identify key predictive health indicators.</li>
+                        <li>Designed responsive UI and implemented logic in Android Studio.</li>
+                    </ul>
+                </div>
+                <div class="tags">
+                    <span class="tag">Java</span>
+                    <span class="tag">Kaggle</span>
+                    <span class="tag">Android Studio</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="experience-card">
-            <div class="experience-header">
-                <div>
-                    <div class="experience-title">Arduino Sensor Testing</div>
-                    <div class="experience-company">Course Project</div>
-                </div>
-                <div class="experience-date">May 2023 - June 2023</div>
+    <!-- Hydrogen Fuel Cell Car -->
+    <div class="experience-card">
+        <div class="experience-header">
+            <div>
+                <div class="experience-title">Hydrogen Fuel Cell Car</div>
+                <div class="experience-company">Personal Project</div>
             </div>
-    
-            <div class="experience-media">
-                <figure class="experience-figure">
-                    <img src="images/experiences/PCB-sensors.png" alt="Arduino Sensor Testing">
-                    <figcaption>Arduino Sensors</figcaption>
-
-                </figure>
-                <div class="experience-body">
-                    <div class="experience-description">
-                        <p>Tested various sensors on a SainSmart Arduino UNO R3 </p>
-                        <ul>
-                            <li>Verified sensor data from potentiometer, light sensor, thumbstick, and button</li>
-                            <li>Programmed Arduino in C++ to check various parameters when sensor requirements are met.</li>
-                        </ul>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">PCB</span>
-                        <span class="tag">Arduino</span>
-                        <span class="tag">C++</span>
-                        <span class="tag">Sensor Testing</span>
-                    </div>
-
+            <div class="experience-date">May 2023 - May 2023</div>
+        </div>
+        <div class="experience-media">
+            <figure class="experience-figure">
+                <img src="images/experiences/hydrogen-fuel-cell.png" alt="Hydrogen fuel cell car setup">
+                <figcaption>Hydrogen Fuel Cell Finished Build</figcaption>
+            </figure>
+            <div class="experience-body">
+                <div class="experience-description">
+                    <p>Built a hydrogen-powered robotic vehicle capable of multi-terrain navigation and sustained runtime.</p>
+                    <ul>
+                        <li>Modeled chassis using AutoCAD and integrated precision wheels for stable movement.</li>
+                        <li>Incorporated hydrogen fuel cell and solar panel to leverage renewable energy sources.</li>
+                    </ul>
+                </div>
+                <div class="tags">
+                    <span class="tag">Autocad</span>
+                    <span class="tag">Renewable Energy</span>
+                    <span class="tag">IoT</span>
+                    <span class="tag">Circuit Design</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="experience-card">
-            <div class="experience-header">
-                <div>
-                    <div class="experience-title">Hydrogen Fuel Cell Car</div>
-                    <div class="experience-company">Personal Project</div>
-                </div>
-                <div class="experience-date">May 2023 - May 2023</div>
+    <!-- Code Lock Circuit Design -->
+    <div class="experience-card">
+        <div class="experience-header">
+            <div>
+                <div class="experience-title">Code Lock Circuit Design</div>
+                <div class="experience-company">Course Project</div>
             </div>
-            <div class="experience-media">
-                <figure class="experience-figure">
-                    <img src="images/experiences/hydrogen-fuel-cell.png" alt="Hydrogen fuel cell car setup">
-                    <figcaption>Hydrogen Fuel Cell Finished Build</figcaption>
-                </figure>
-                <div class="experience-body">
-                    <div class="experience-description">
-                        <p>Engineered a hydrogen-powered robotic vehicle with 3-minute runtime and terrain navigation over large cracks</p>
-                        <ul>
-                            <li>Modeled chassis with metal and precision wheels in AutoCAD</li>
-                            <li>Integrated fuel cell and solar panel to harness renewable energy</li>
-                        </ul>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">Autocad</span>
-                        <span class="tag">Renewable Energy</span>
-                        <span class="tag">IoT</span>
-                        <span class="tag">Circuit Design</span>
-                    </div>
-
+            <div class="experience-date">May 2024 - June 2024</div>
+        </div>
+        <div class="experience-media">
+            <figure class="experience-figure">
+                <img src="images/experiences/codelock-front.png" alt="Code Lock Cover">
+                <figcaption>Code Lock Cover</figcaption>
+                <figcaption>Click to see more pictures!</figcaption>
+            </figure>
+            <figure class="experience-figure hidden-thumb" aria-hidden="true">
+                <img src="images/experiences/codelock-circuit.png" alt="Code Lock Circuit">
+                <figcaption>Code Lock Circuit</figcaption>
+            </figure>
+            <div class="experience-body">
+                <div class="experience-description">
+                    <p>Created a digital locking system requiring a specific button sequence to unlock.</p>
+                    <ul>
+                        <li>Simulated circuit behavior and edge cases using NI MultiSim.</li>
+                        <li>Constructed and powered full circuit using breadboards and linear power supply.</li>
+                    </ul>
+                </div>
+                <div class="tags">
+                    <span class="tag">Circuit Design</span>
+                    <span class="tag">MultiSim</span>
+                    <span class="tag">Digital Logic</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="experience-card">
-            <div class="experience-header">
-                <div>
-                    <div class="experience-title">Wormholes and Teleporters</div>
-                    <div class="experience-company">Course Project</div>
-                </div>
-                <div class="experience-date">November 2023 - December 2023</div>
+    <!-- Arduino Sensor Testing -->
+    <div class="experience-card">
+        <div class="experience-header">
+            <div>
+                <div class="experience-title">Arduino Sensor Testing</div>
+                <div class="experience-company">Course Project</div>
             </div>
-            <div class="experience-media">
-                <figure class="experience-figure">
-                    <img src="images/experiences/wt-start.png" alt="Starting Screen">
-                    <figcaption>Starting Screen of Game</figcaption>
-                    <figcaption>Click to see more pictures!</figcaption>
-                </figure>
-                <figure class="experience-figure hidden-thumb" aria-hidden="true">
-                    <img src="images/experiences/wt-next.png" alt="Player moves">
-                    <figcaption>Player moves</figcaption>
-                </figure>
-                <div class="experience-body">
-                    <div class="experience-description">
-                        <p>Built simple 'Wormholes and Teleporters' game similar to the classic 'Chutes and Ladders' game in terminal</p>
-                        <ul>
-                            <li>Utilized C++ and multi-file compilation to display mini game in terminal</li>
-                            <li>Keeps track of randomized hidden points to move players forwards or backwards until one player can reach bottom right box</li>
-                        </ul>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">C++</span>
-                        <span class="tag">Multi-Files</span>
-                        <span class="tag">GCC</span>
-                    </div>
-    
+            <div class="experience-date">May 2023 - June 2023</div>
+        </div>
+        <div class="experience-media">
+            <figure class="experience-figure">
+                <img src="images/experiences/PCB-sensors.png" alt="Arduino Sensor Testing">
+                <figcaption>Arduino Sensors</figcaption>
+            </figure>
+            <div class="experience-body">
+                <div class="experience-description">
+                    <p>Programmed and tested multiple sensors on a SainSmart Arduino UNO R3 microcontroller.</p>
+                    <ul>
+                        <li>Verified readings from potentiometer, light sensor, thumbstick, and button modules.</li>
+                        <li>Implemented C++ control logic to trigger actions based on sensor thresholds.</li>
+                    </ul>
+                </div>
+                <div class="tags">
+                    <span class="tag">Arduino</span>
+                    <span class="tag">C++</span>
+                    <span class="tag">Microcontrollers</span>
+                    <span class="tag">Sensor Testing</span>
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Wormholes and Teleporters -->
+    <div class="experience-card">
+        <div class="experience-header">
+            <div>
+                <div class="experience-title">Wormholes and Teleporters</div>
+                <div class="experience-company">Course Project</div>
+            </div>
+            <div class="experience-date">November 2023 - December 2023</div>
+        </div>
+        <div class="experience-media">
+            <figure class="experience-figure">
+                <img src="images/experiences/wt-start.png" alt="Starting Screen">
+                <figcaption>Starting Screen of Game</figcaption>
+                <figcaption>Click to see more pictures!</figcaption>
+            </figure>
+            <figure class="experience-figure hidden-thumb" aria-hidden="true">
+                <img src="images/experiences/wt-next.png" alt="Player moves">
+                <figcaption>Player moves</figcaption>
+            </figure>
+            <div class="experience-body">
+                <div class="experience-description">
+                    <p>Developed a terminal-based game inspired by Chutes & Ladders using C++ data structures.</p>
+                    <ul>
+                        <li>Implemented pointer-based graph traversal with manual memory management.</li>
+                        <li>Generated randomized board events to move players forward or backward.</li>
+                    </ul>
+                </div>
+                <div class="tags">
+                    <span class="tag">C++</span>
+                    <span class="tag">Data Structures</span>
+                    <span class="tag">Multi-Files</span>
+                    <span class="tag">GCC</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
         
         <h2 class="section-header">Leadership and Activites</h2>
         <div class="experience-card">
@@ -816,7 +919,7 @@
                         <div class="tags">
                             <span class="tag">Computer Science</span>
                             <span class="tag">Community Engagement</span>
-                            <span class="tag">Professor-Led Workshops</span>
+                            <span class="tag">Technical Workshops</span>
                             <span class="tag">Multi-Club Collaboration</span>
                         </div>
                       
@@ -1018,6 +1121,30 @@
                 if (Math.abs(dx) > 40) {
                     if (dx > 0) prevBtn.click(); else nextBtn.click();
                 }
+            });
+        })();
+    </script>
+    <script>
+        // Skill details dropdowns: attach handlers to .detail-toggle buttons
+        (function(){
+            const toggles = Array.from(document.querySelectorAll('.detail-toggle'));
+            if (!toggles.length) return;
+
+            toggles.forEach(btn => {
+                const details = btn.nextElementSibling;
+                btn.addEventListener('click', () => {
+                    const isOpen = details.classList.toggle('open');
+                    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                    details.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+                });
+
+                // keyboard support: Enter/Space to toggle
+                btn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        btn.click();
+                    }
+                });
             });
         })();
     </script>
