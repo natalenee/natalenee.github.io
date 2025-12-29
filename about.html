@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me - Natalene Gunawan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #FAFAFA 0%, #E8EEF5 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #444;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #4A6FA5;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #4A6FA5;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        nav a.active {
+            color: #4A6FA5;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 120px 2rem 4rem;
+        }
+
+        /* Hero Section with Photo */
+        .about-hero {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .photo-container {
+            flex: 0 0 280px;
+        }
+
+        .headshot {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 8px 30px rgba(74, 111, 165, 0.2);
+            border: 4px solid white;
+        }
+
+        .headshot-placeholder {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4A6FA5 0%, #6B9080 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            color: white;
+            box-shadow: 0 8px 30px rgba(74, 111, 165, 0.2);
+            border: 4px solid white;
+        }
+
+        .about-content {
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 2.8rem;
+            color: #222;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            font-size: 1.3rem;
+            color: #4A6FA5;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .bio {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            animation: fadeIn 0.8s ease-out 0.3s backwards;
+        }
+
+        .tab-button {
+            padding: 0.8rem 1.8rem;
+            background: white;
+            border: 2px solid #E8EEF5;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .tab-button:hover {
+            border-color: #4A6FA5;
+            color: #4A6FA5;
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: #4A6FA5;
+            color: white;
+            border-color: #4A6FA5;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .content-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .content-section h3 {
+            font-size: 1.5rem;
+            color: #4A6FA5;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title {
+            font-size: 1.3rem;
+            color: #4A6FA5;
+            margin-top: 2.5rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E8EEF5;
+        }
+
+        .hobby-grid, .games-grid, .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .item-card {
+            background: #F8F9FA;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #4A6FA5;
+            transition: all 0.3s ease;
+        }
+
+        .item-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(74, 111, 165, 0.15);
+        }
+
+        .item-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .item-card .title {
+            font-weight: 600;
+            color: #222;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-card .description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .special-note {
+            background: #E8EEF5;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .special-note strong {
+            color: #4A6FA5;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .about-hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .photo-container {
+                flex: 0 0 auto;
+            }
+
+            .headshot, .headshot-placeholder {
+                width: 220px;
+                height: 220px;
+            }
+
+            .page-title {
+                font-size: 2.2rem;
+            }
+
+            .page-subtitle {
+                font-size: 1.1rem;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+                font-size: 0.85rem;
+            }
+
+            .tab-nav {
+                justify-content: center;
+            }
+
+            .tab-button {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .hobby-grid, .games-grid, .books-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html" class="active">About Me</a></li>
+            <li><a href="experiences.html">Experiences</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="resume.html">Resume</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="about-hero">
+            <div class="photo-container">
+                <img src="images/headshot.jpg" alt="Natalene Gunawan" class="headshot">
+            </div>
+
+            <div class="about-content">
+                <h1 class="page-title">About Me</h1>
+                <p class="page-subtitle">Computer Engineering Student | Problem Solver | Creative Thinker</p>
+                <p class="bio">
+                    I'm <strong>Natalene Gunawan</strong>, a Computer Engineering student at the <strong>University of California, Irvine</strong>. 
+                    I graduated from <strong>Mt. San Antonio College (Mt.SAC)</strong> in 2024 with an Associate's degree in Mathematics 
+                    before transferring to UCI to pursue my passion for Computer Engineering.
+                </p>
+
+                <p class="bio">
+                    My expertise comes with a strong foundation in both hardware and software along with a unique eye in artistic design. With a passion for drawing
+                    and design, I love being able to combine innovation with creative usability and functionality. This led me to pursue Computer Engineering in college where 
+                    I could combine my love for both in a way that makes my work enjoyable and meaningful to use.
+                </p>
+
+                <p class="bio">
+                    I love working at the intersection of hardware and software, building systems that solve real-world problems. 
+                    When I'm not coding or designing circuits, you'll find me rock climbing, gaming, or diving into a good book! Check out some of my favorites below!
+                </p>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-button active" data-tab="games">🎮 Favorite Games</button>
+            <button class="tab-button" data-tab="hobbies">🏔️ Hobbies</button>
+            <button class="tab-button" data-tab="books">📚 Favorite Books</button>
+        </div>
+
+        <!-- Hobbies Tab -->
+        <div class="tab-content" id="hobbies">
+            <div class="content-section">
+                <h3>🏔️ My Hobbies</h3>
+                <div class="hobby-grid">
+                    <div class="item-card">
+                        <span class="icon">🧗‍♀️</span>
+                        <div class="title">Rock Climbing</div>
+                        <div class="description">
+                            I love the mental and physical challenge of climbing. I am always on the hunt to pushing my functional strength
+                            to the limits!
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">💪</span>
+                        <div class="title">Weightlifting</div>
+                        <div class="description">
+                            Strength training keeps me focused and energized. I enjoy pushing my limits and seeing consistent progress 
+                            through dedication and discipline. My best de-stress method and makes me feel powerful!
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">🥾</span>
+                        <div class="title">Hiking</div>
+                        <div class="description">
+                            There's something peaceful about being out in nature. Hiking clears my mind and gives me time to think 
+                            creatively while enjoying beautiful views. Ocean views, waterfalls, and cool rocks are always what I love to look for in hikes!
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">🏂</span>
+                        <div class="title">Snowboarding</div>
+                        <div class="description">
+                            The thrill of carving down snowy slopes is unmatched! Snowboarding challenges my balance and coordination 
+                            while giving me an adrenaline rush I absolutely love. I'm pretty new to the sport but am always trying to get back up there when I can!
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">🍵</span>
+                        <div class="title">Cafe-Hopping</div>
+                        <div class="description">
+                            I LOVE discovering new cafes and trying different drinks—especially a good jasmine milk tea! There's 
+                            something special about finding a cozy spot to relax and enjoy a perfect cup. I take my teas very seriously!
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">🌍</span>
+                        <div class="title">Exploring New Cities</div>
+                        <div class="description">
+                            I love traveling and experiencing different cultures! Japan and Indonesia were incredible, but my favorite 
+                            state to visit is New York—my sister lives there, so I get to explore the city and spend time with family.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Games Tab -->
+        <div class="tab-content active" id="games">
+            <div class="content-section">
+                <h3>🎮 Favorite Games</h3>
+                <div class="games-grid">
+                    <div class="item-card">
+                        <span class="icon">⚔️</span>
+                        <div class="title">Baldur's Gate 3</div>
+                        <div class="description">
+                            An incredible RPG with deep storytelling and meaningful choices. The kind of game where I can make a decision 
+                            and feel the consequences of it 100 hours later. No corners cut. Absolute perfection. 
+                        </div>
+                        <div><strong>10/10</strong></div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">🔥</span>
+                        <div class="title">Divinity: Original Sin</div>
+                        <div class="description">
+                            A masterclass in RPG gameplay with creative problem-solving and an engaging turn-based 
+                            combat system that rewards strategic thinking. Made by the same creators that built BG3 and you can feel every
+                            ounce of love in this game.
+                        </div>
+                        <div><strong>10/10</strong></div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">✨</span>
+                        <div class="title">Genshin Impact & Honkai: Star Rail</div>
+                        <div class="description">
+                            Beautiful open-world games with engaging stories and characters. My longest commitment to a game was Genshin. I grew up with it 5 years ago and continue
+                            to play them with each new update. Nostalgic and innovative at the same time.
+                        </div>
+                        <div><strong>8/10</strong></div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">🎭</span>
+                        <div class="title">Persona 5</div>
+                        <div class="description">
+                            A stylish JRPG that perfectly blends social simulation with dungeon crawling. The story, art style, 
+                            and soundtrack make it an unforgettable experience. The art and music design is beautifully iconic and it made me feel inspired to explore game development and 
+                            jump back into drawing!
+                        </div>
+                        <div><strong>9/10</strong></div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">🚀</span>
+                        <div class="title">Expedition 33</div>
+                        <div class="description">
+                            A thrilling space exploration game that combines strategy and survival. The sense of discovery and 
+                            beautiful storytelling drew me in alongside it's unique gameplay style similar to PS5 and BG3. One of my
+                            more recent plays that won GOTY!
+                        </div>
+                        <div><strong>8.5/10</strong></div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">🌾</span>
+                        <div class="title">Stardew Valley</div>
+                        <div class="description">
+                            The perfect cozy farming sim to unwind with! Building my farm, befriending villagers, and maximizing
+                            profits is endlessly relaxing and rewarding. Extremely nostalgic and reminds me of playing with friends
+                            and enjoying the simple pleasures of gaming together.
+                        </div>
+                        <div><strong>9/10</strong></div>
+                    </div>
+                </div>
+                <div class="special-note">
+                    <strong>Fun fact:</strong> I like to beta test for Genshin Impact and Honkai: Star Rail occasionally! It's exciting to provide 
+                    feedback and help shape the games before they're released to the public.
+                </div>
+            </div>
+        </div>
+
+        <!-- Books Tab -->
+        <div class="tab-content" id="books">
+            <div class="content-section">
+                <h3>📚 Favorite Books</h3>
+                <div class="books-grid">
+                    <div class="item-card">
+                        <span class="icon">📖</span>
+                        <div class="title">My Annihilation</div>
+                        <div class="description">
+                            <strong>by Fuminori Nakamura</strong><br>
+                            A psychological thriller that explores identity and the dark corners of the human psyche. 
+                            Nakamura's writing is haunting and thought-provoking. An intruiging two-person narrative with an incredible twist!
+                        </div>
+                        <div><strong>5/5</strong></div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">📕</span>
+                        <div class="title">The Vegetarian</div>
+                        <div class="description">
+                            <strong>by Han Kang</strong><br>
+                            A powerful and unsettling story about one woman's radical act of resistance. Han Kang's 
+                            prose is beautiful yet disturbing, making this an unforgettable read. Broken down into three parts of various perspectives
+                            with a beautifully ambiguous ending.
+                        </div>
+                        <div><strong>4/5</strong></div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">📘</span>
+                        <div class="title">More Happy Than Not</div>
+                        <div class="description">
+                            <strong>by Adam Silvera</strong><br>
+                            A heartfelt and emotional story about identity, memory, and happiness. Genuinely caught off by the plot twist and was immediately hooked.
+                            This novel made me relate to a deep part of myself that I hadn't fully understood before. A meaningful read!
+                        </div>
+                        <div><strong>4.5/5</strong></div>
+                    </div>
+                </div>
+
+                <h4 class="subsection-title">📚 Future Reads Planned...</h4>
+                <div class="books-grid">
+                    <div class="item-card">
+                        <span class="icon">🏚️</span>
+                        <div class="title">Strange Houses</div>
+                        <div class="description">
+                            <strong>by Uketsu</strong><br>
+                            An atmospheric exploration of eerie dwellings and the mysteries they hold. I'm excited to dive 
+                            into this unique and unsettling narrative. Comes with cool schematics of the houses layout to investigate throughout the novel!
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">⏳</span>
+                        <div class="title">It Lasts Forever and Then It's Over</div>
+                        <div class="description">
+                            <strong>by Anne de Marcken</strong><br>
+                            A contemplation on existence and impermanence that promises to be both philosophical and 
+                            deeply moving. Can't wait to experience this journey.
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <span class="icon">🤔</span>
+                        <div class="title">Nausea</div>
+                        <div class="description">
+                            <strong>by Jean-Paul Sartre</strong><br>
+                            A cornerstone of existentialist literature. I'm looking forward to exploring Sartre's philosophy 
+                            through this classic novel about meaning and existence.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="special-note">
+                    <strong>Fun fact:</strong> I read the most books during my internship seasons! Having more free time in the evenings 
+                    and weekends makes it the perfect opportunity to dive into new stories. It's one of the things that makes 
+                    internship season my favorite time of year!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Add active class to clicked button
+                button.classList.add('active');
+
+                // Show corresponding content
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
